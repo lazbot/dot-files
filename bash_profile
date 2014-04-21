@@ -7,13 +7,17 @@ export CLICOLOR=1
 if [ $(uname) = 'Darwin' ] ; then
     export SVN_EDITOR='subl -w'
     export EDITOR='subl -w'
+    export EDITOR_DONT_WAIT='subl'
+    export EDITOR_NEW_WINDOW='subl --new-window'
     export VAGRANT_VMWARE_CLONE_DIRECTORY="~/Documents/Vagrant/"
 
-    add-my-key () { ssh-add -k ~/.ssh/arborwolf_rsa ~/.ssh/arborwolf_dsa; }
+    function add-my-key() { ssh-add -k ~/.ssh/arborwolf_rsa ~/.ssh/arborwolf_dsa; }
 
     if [ -f $(brew --prefix)/etc/bash_completion ]; then
         source $(brew --prefix)/etc/bash_completion
     fi
+
+    complete -o default -o nospace -F _gitk gitx
 
     alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
 
@@ -24,8 +28,8 @@ else
     alias ls='ls --color=always'
     export SVN_EDITOR='vim'
     export EDITOR='vim'
-
-    add-my-key () { ssh-add ~/.ssh/arborwolf_rsa ~/.ssh/arborwolf_dsa; }
+    export EDITOR_DONT_WAIT='vim'
+    export EDITOR_NEW_WINDOW='vim'
 
     if [ -f ~/.git-completion.bash ] ; then
         source ~/.git-completion.bash
@@ -33,6 +37,10 @@ else
     if [ -f ~/.git-prompt.sh ] ; then
         source ~/.git-prompt.sh
     fi
+
+    function fx() {
+        find . -name $1 | xargs ls -l --color=always
+    }
 
     export PATH=$PATH:/usr/local/sbin:~/bin
 
@@ -45,8 +53,19 @@ fi
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-function virtualenv_info {
+function virtualenv_info() {
     [ $VIRTUAL_ENV ] && echo ' ('$(basename $VIRTUAL_ENV)')'
+}
+
+# used to reattach ssh forwarding to "stale" tmux sessions
+# http://justinchouinard.com/blog/2010/04/10/fix-stale-ssh-environment-variables-in-gnu-screen-and-tmux/
+function refresh_ssh() {
+    if [[ -n $TMUX ]]; then
+        NEW_SSH_AUTH_SOCK=$(tmux showenv | grep ^SSH_AUTH_SOCK | cut -d = -f 2)
+        if [[ -n $NEW_SSH_AUTH_SOCK ]] && [[ -S $NEW_SSH_AUTH_SOCK ]]; then
+            SSH_AUTH_SOCK=$NEW_SSH_AUTH_SOCK
+        fi
+    fi
 }
 
 export PS1='\n\t \u@$(uname -n):\[\e[34m\]\W\[\e[0m\]$(virtualenv_info) $(__git_ps1 "\[\e[32m\][%s $(get_sha)]\[\e[0m\]")\$ '
@@ -60,27 +79,50 @@ alias ll='ls -alh'
 alias ..='cd ..'
 alias ...='cd ../..'
 
-did () { history | grep $1; }
+function did() { history | grep $1; }
 
 bind '"\t":menu-complete'
 bind '"\e[A":history-search-backward'
 bind '"\e[B":history-search-forward'
 
-f () { find . -name $1; }
-fd () { find $1 -name $2; }
-sbn () { find . -name $1 | xargs subl --new-window; }
-sbw () { subl $(which $1); }
-flaken () { find . -name $1 | xargs pyflakes; }
+function f() { find . -name $1; }
+function fd() { find $1 -name $2; }
+function edit_name() { find . -name $1 | xargs $EDITOR_NEW_WINDOW; }
+function edit_which() { $EDITOR_DONT_WAIT $(which $1); }
+function flake_name() { find . -name $1 | xargs pyflakes; }
 
-get_dir () { printf "%s" $(pwd | sed "s:$HOME:~:"); }
-get_sha () { git rev-parse --short HEAD 2>/dev/null; }
+function fcd() {
+    path=$(find . -name $1 | awk "BEGIN { getline; print }")
+    cd $(dirname $path)
+}
 
-alias flake="git diff --name-only | grep '\.py$' | xargs pyflakes"
-alias flake_commit="git diff HEAD^ --name-only | grep '\.py$' | xargs pyflakes"
+function cd_top() {
+    git_dir=$(git rev-parse --git-dir)
+    if [ -n "$git_dir" ]; then
+        cd "$git_dir/../"
+    fi
+}
+
+function get_dir() { printf "%s" $(pwd | sed "s:$HOME:~:"); }
+function get_sha() { git rev-parse --short HEAD 2>/dev/null; }
+
+function flake_committed() {
+    commit=${1:-HEAD}
+    pushd $(git rev-parse --git-dir)/../ &>/dev/null
+    git diff $commit ${commit}\^ --name-only | grep '\.py$' | xargs pyflakes
+    popd >/dev/null &>/dev/null
+}
+
+function edit_committed() {
+    commit=${1:-HEAD}
+    pushd $(git rev-parse --git-dir)/../ &>/dev/null
+    git diff $commit ${commit}\^ --name-only | xargs $EDITOR_NEW_WINDOW
+    popd &>/dev/null
+}
 
 alias dirty='git ls-files --modified --unmerged | awk '\''{ print $4 }'\'' | sort -u'
-alias subdirty='dirty | xargs subl --new-window'
-complete -o default -o nospace -F _gitk gitx
+alias flake_dirty="dirty | grep '\.py$' | xargs pyflakes"
+alias edit_dirty='dirty | xargs $EDITOR_NEW_WINDOW'
 
 alias co='git checkout'
 complete -o default -o nospace -F _git_checkout co
