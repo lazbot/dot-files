@@ -75,7 +75,7 @@ export HISTSIZE=10000
 export HISTIGNORE="&:ls:[bf]g:exit:history:..:cdgit:make:git pull:git commit"
 shopt -s histappend cdspell
 
-alias ll='ls -alh'
+alias ll='ls -FTGalh'
 alias ..='cd ..'
 alias ...='cd ../..'
 
@@ -108,28 +108,21 @@ function get_sha() { git rev-parse --short HEAD 2>/dev/null; }
 
 function flake_committed() {
     commit=${1:-HEAD}
-    pushd $(git rev-parse --git-dir)/../ &>/dev/null
-    git diff $commit ${commit}\^ --name-only | grep '\.py$' | xargs pyflakes
-    popd >/dev/null &>/dev/null
+    git diff $commit ${commit}\^ --name-only --relative | grep '\.py$' | xargs pyflakes
 }
 
 function edit_committed() {
     commit=${1:-HEAD}
-    pushd $(git rev-parse --git-dir)/../ &>/dev/null
-    git diff $commit ${commit}\^ --name-only | xargs $EDITOR_NEW_WINDOW
-    popd &>/dev/null
+    git diff $commit ${commit}\^ --name-only --relative | xargs $EDITOR_NEW_WINDOW
 }
 
 alias dirty='git ls-files --modified --unmerged | awk '\''{ print $4 }'\'' | sort -u'
 alias flake_dirty="dirty | grep '\.py$' | xargs pyflakes"
 alias edit_dirty='dirty | xargs $EDITOR_NEW_WINDOW'
 
-alias co='git checkout'
-complete -o default -o nospace -F _git_checkout co
-
-alias push.='git push origin HEAD'
-alias push+='git push origin +HEAD'
-alias push-='git push origin :$(git rev-parse --symbolic-full-name HEAD)'
+# alias push.='git push origin HEAD'
+# alias push+='git push origin +HEAD'
+# alias push-='git push origin :$(git rev-parse --symbolic-full-name HEAD)'
 
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWSTASHSTATE=1
