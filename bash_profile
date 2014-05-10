@@ -5,21 +5,30 @@ fi
 export CLICOLOR=1
 
 if [ $(uname) = 'Darwin' ] ; then
-    export SVN_EDITOR='subl -w'
-    export EDITOR='subl -w'
-    export EDITOR_DONT_WAIT='subl'
-    export EDITOR_NEW_WINDOW='subl --new-window'
-    export VAGRANT_VMWARE_CLONE_DIRECTORY="~/Documents/Vagrant/"
 
-    function add-my-key() { ssh-add -k ~/.ssh/arborwolf_rsa ~/.ssh/arborwolf_dsa; }
+    if [ "${SSH_CONNECTION}" ] ; then
+        export SVN_EDITOR='vim'
+        export EDITOR='vim'
+        export EDITOR_DONT_WAIT='vim'
+        export EDITOR_NEW_WINDOW='vim'
+
+    else
+        export SVN_EDITOR='subl -w'
+        export EDITOR='subl -w'
+        export EDITOR_DONT_WAIT='subl'
+        export EDITOR_NEW_WINDOW='subl --new-window'
+        export VAGRANT_VMWARE_CLONE_DIRECTORY="~/Documents/Vagrant/"
+
+        function add-my-key() { ssh-add -k ~/.ssh/arborwolf_rsa ~/.ssh/arborwolf_dsa; }
+
+        complete -o default -o nospace -F _gitk gitx
+
+        alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
+    fi
 
     if [ -f $(brew --prefix)/etc/bash_completion ]; then
         source $(brew --prefix)/etc/bash_completion
     fi
-
-    complete -o default -o nospace -F _gitk gitx
-
-    alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
 
     export PATH=$PATH:/usr/local/sbin:~/bin:$HOME/.rvm/bin
 
@@ -57,6 +66,10 @@ function virtualenv_info() {
     [ $VIRTUAL_ENV ] && echo ' ('$(basename $VIRTUAL_ENV)')'
 }
 
+function tip() {
+    git rev-parse --short HEAD 2>/dev/null
+}
+
 # used to reattach ssh forwarding to "stale" tmux sessions
 # http://justinchouinard.com/blog/2010/04/10/fix-stale-ssh-environment-variables-in-gnu-screen-and-tmux/
 function refresh_ssh() {
@@ -68,7 +81,7 @@ function refresh_ssh() {
     fi
 }
 
-export PS1='\n\t \u@$(uname -n):\[\e[34m\]\W\[\e[0m\]$(virtualenv_info) $(__git_ps1 "\[\e[32m\][%s $(get_sha)]\[\e[0m\]")\$ '
+export PS1='\n\t \u@$(uname -n):\[\e[34m\]\W\[\e[0m\]$(virtualenv_info) $(__git_ps1 "\[\e[32m\][%s $(tip)]\[\e[0m\]")\$ '
 
 export HISTCONTROL=erasedups
 export HISTSIZE=10000
@@ -85,40 +98,109 @@ bind '"\t":menu-complete'
 bind '"\e[A":history-search-backward'
 bind '"\e[B":history-search-forward'
 
-function f() { find . -name $1; }
-function fd() { find $1 -name $2; }
-function edit_name() { find . -name $1 | xargs $EDITOR_NEW_WINDOW; }
-function edit_which() { $EDITOR_DONT_WAIT $(which $1); }
-function flake_name() { find . -name $1 | xargs pyflakes; }
+function f() {
+    find . -name $1
+}
 
 function fcd() {
     path=$(find . -name $1 | awk "BEGIN { getline; print }")
     cd $(dirname $path)
 }
 
-function cd_top() {
+function cdtop() {
     git_dir=$(git rev-parse --git-dir)
     if [ -n "$git_dir" ]; then
         cd "$git_dir/../"
     fi
 }
 
-function get_dir() { printf "%s" $(pwd | sed "s:$HOME:~:"); }
-function get_sha() { git rev-parse --short HEAD 2>/dev/null; }
-
-function flake_committed() {
+function since_commit() {
     commit=${1:-HEAD}
-    git diff $commit ${commit}\^ --name-only --relative | grep '\.py$' | xargs pyflakes
+    git diff $commit --name-only --relative
 }
 
-function edit_committed() {
+function in_commit() {
     commit=${1:-HEAD}
-    git diff $commit ${commit}\^ --name-only --relative | xargs $EDITOR_NEW_WINDOW
+    git diff $commit ${commit}\^ --name-only --relative
 }
 
-alias dirty='git ls-files --modified --unmerged | awk '\''{ print $4 }'\'' | sort -u'
-alias flake_dirty="dirty | grep '\.py$' | xargs pyflakes"
-alias edit_dirty='dirty | xargs $EDITOR_NEW_WINDOW'
+function dirty() {
+    git ls-files --modified --unmerged | awk '{ print $4 }' | sort -u
+}
+
+function pyflakes_name() {
+    find . -name $1 | xargs pyflakes
+}
+
+function pyflakes_since() {
+    since_commit $1 | grep '\.py$' | xargs pyflakes
+}
+
+function pyflakes_commit() {
+    in_commit $1 | grep '\.py$' | xargs pyflakes
+}
+
+function pyflakes_dirty() {
+    dirty | grep '\.py$' | xargs pyflakes
+}
+
+function pylint_since() {
+    since_commit $1 | grep '\.py$' | xargs pylint
+}
+
+function pylint_commit() {
+    in_commit $1 | grep '\.py$' | xargs pylint
+}
+
+function pylint_dirty() {
+    dirty | grep '\.py$' | xargs pylint
+}
+
+function jshint_name() {
+    find . -name $1 | xargs jshint
+}
+
+function jshint_since() {
+    since_commit $1 | grep '\.js$' | xargs jshint
+}
+
+function jshint_commit() {
+    in_commit $1 | grep '\.js$' | xargs jshint
+}
+
+function jshint_dirty() {
+    dirty | grep '\.js$' | xargs jshint
+}
+
+function edit_name() {
+    $EDITOR_NEW_WINDOW $(find . -name $1 -type f)
+}
+
+function edit_which() {
+    $EDITOR_NEW_WINDOW $(which $1)
+}
+
+function edit_since() {
+    $EDITOR_NEW_WINDOW $(since_commit $1)
+}
+
+function edit_commit() {
+    $EDITOR_NEW_WINDOW $(in_commit $1)
+}
+
+function edit_dirty() {
+    $EDITOR_NEW_WINDOW $(dirty)
+}
+
+function add_dirty() {
+    dirty | xargs git add
+}
+
+function dev_since() {
+    commit=${1:-origin/NUCLEUS_64}
+    box=${2:-braveheart}
+    since_commit $commit | xargs spcp -d $box
+}
 
 # alias push.='git push origin HEAD'
 # alias push+='git push origin +HEAD'
