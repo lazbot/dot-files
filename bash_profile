@@ -19,8 +19,6 @@ if [ $(uname) = 'Darwin' ] ; then
         export EDITOR_NEW_WINDOW='subl --new-window'
         export VAGRANT_VMWARE_CLONE_DIRECTORY="~/Documents/Vagrant/"
 
-        function add-my-key() { ssh-add -k ~/.ssh/arborwolf_rsa ~/.ssh/arborwolf_dsa; }
-
         complete -o default -o nospace -F _gitk gitx
 
         alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
@@ -30,7 +28,8 @@ if [ $(uname) = 'Darwin' ] ; then
         source $(brew --prefix)/etc/bash_completion
     fi
 
-    export PATH=$PATH:/usr/local/sbin:~/bin:$HOME/.rvm/bin
+    export PATH=$PATH:~/bin:~/.rvm/bin
+    export GOPATH=/Users/wolf/Work/go
 
     [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 else
@@ -196,12 +195,6 @@ function add_dirty() {
     dirty | xargs git add
 }
 
-function dev_since() {
-    commit=${1:-origin/NUCLEUS_64}
-    box=${2:-braveheart}
-    since_commit $commit | xargs spcp -d $box
-}
-
 # alias push.='git push origin HEAD'
 # alias push+='git push origin +HEAD'
 # alias push-='git push origin :$(git rev-parse --symbolic-full-name HEAD)'
@@ -213,6 +206,6 @@ export GIT_PS1_SHOWUPSTREAM="auto"
 export GIT_PS1_SHOWCOLORHINTS=1
 export GIT_PS1_DESCRIBE_STYLE="branch"
 
-if [ $(which virtualenvwrapper.sh 2>/dev/null) ]; then
-    source $(which virtualenvwrapper.sh)
-fi
+#if [ $(which virtualenvwrapper.sh 2>/dev/null) ]; then
+#    source $(which virtualenvwrapper.sh)
+#fi
