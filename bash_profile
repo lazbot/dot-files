@@ -5,38 +5,45 @@ fi
 export CLICOLOR=1
 
 if [ $(uname) = 'Darwin' ] ; then
+    # if I'm on MacOS X...
 
     if [ "${SSH_CONNECTION}" ] ; then
-        export SVN_EDITOR='vim'
+        # if I'm only on MacOS X because I SSH-ed into it...
         export EDITOR='vim'
-        export EDITOR_DONT_WAIT='vim'
         export EDITOR_NEW_WINDOW='vim'
-
     else
-        export SVN_EDITOR='subl -w'
+        # ...nope, I'm really on MacOS X.  Not just through SSH.
         export EDITOR='subl -w'
-        export EDITOR_DONT_WAIT='subl'
         export EDITOR_NEW_WINDOW='subl --new-window'
         export VAGRANT_VMWARE_CLONE_DIRECTORY="~/Documents/Vagrant/"
 
-        complete -o default -o nospace -F _gitk gitx
-
         alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
     fi
+
+    alias ll='ls -FTGalh'
+
+    function fx() {
+        find . -name $1 | xargs ls -FTGalhd
+    }
 
     if [ -f $(brew --prefix)/etc/bash_completion ]; then
         source $(brew --prefix)/etc/bash_completion
     fi
 
-    export PATH=$PATH:~/bin:~/.rvm/bin
     export GOPATH=/Users/wolf/Work/go
+    # [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
-    [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+    # Setting PATH for Python 2.7
+    PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
+    export PATH
+
+    # Setting PATH for Python 3.5
+    PATH="/Library/Frameworks/Python.framework/Versions/3.5/bin:${PATH}"
+    export PATH
 else
     alias ls='ls --color=always'
-    export SVN_EDITOR='vim'
+    alias ll='ls --color=always -Falh'
     export EDITOR='vim'
-    export EDITOR_DONT_WAIT='vim'
     export EDITOR_NEW_WINDOW='vim'
 
     if [ -f ~/.git-completion.bash ] ; then
@@ -47,16 +54,10 @@ else
     fi
 
     function fx() {
-        find . -name $1 | xargs ls -l --color=always
+        find . -name $1 | xargs ls --color=always -Falhd
     }
 
     export PATH=$PATH:/usr/local/sbin:~/bin
-
-    if [[ -d "/arbos-tmp" && -n $SSH_AUTH_SOCK ]]; then
-        if [[ ! $SSH_AUTH_SOCK = /arbos-tmp* ]]; then
-            SSH_AUTH_SOCK=$(echo $SSH_AUTH_SOCK | sed 's/tmp/arbos-tmp/')
-        fi
-    fi
 fi
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
@@ -80,33 +81,38 @@ function refresh_ssh() {
     fi
 }
 
-export PS1='\n\t \u@$(uname -n):\[\e[34m\]\W\[\e[0m\]$(virtualenv_info) $(__git_ps1 "\[\e[32m\][%s $(tip)]\[\e[0m\]")\$ '
+export PS1='\n\! \u@$(uname -n):\[\e[34m\]\W\[\e[0m\]$(virtualenv_info) $(__git_ps1 "\[\e[32m\][%s $(tip)]\[\e[0m\]")\$ '
 
-export HISTCONTROL=erasedups
 export HISTSIZE=10000
-export HISTIGNORE="&:ls:[bf]g:exit:history:..:cdgit:make:git pull:git commit"
-shopt -s histappend cdspell
+export HISTIGNORE="&:ls:[bf]g:exit:history:..:make:git pull:git commit"
+shopt -s histappend cdspell autocd
 
-alias ll='ls -FTGalh'
-alias ..='cd ..'
-alias ...='cd ../..'
+function did() { history | grep $1 | grep -v did; }
 
-function did() { history | grep $1; }
-
-bind '"\t":menu-complete'
-bind '"\e[A":history-search-backward'
-bind '"\e[B":history-search-forward'
+# Don't bind if I'm in GoSublime's 9o shell
+if [ -z "${_fn}" ]; then
+    bind '"\t":menu-complete'
+    bind '"\e[A":history-search-backward'
+    bind '"\e[B":history-search-forward'
+fi
 
 function f() {
-    find . -name $1
+    # usage: f <name>
+    # find the filesystem object with the given name
+    find . -name $1 2>/dev/null
 }
 
 function fcd() {
-    path=$(find . -name $1 | awk "BEGIN { getline; print }")
+    # usage: fcd <directory_basename>
+    # example: fcd js
+    # find the directory with the given name, cd-ing into the first match found
+    path=$(find . -name $1 -type d 2>/dev/null | awk "BEGIN { getline; print }")
     cd $(dirname $path)
 }
 
 function cdtop() {
+    # usage: cdtop
+    # change directory to the top-level of a git working-copy
     git_dir=$(git rev-parse --git-dir)
     if [ -n "$git_dir" ]; then
         cd "$git_dir/../"
@@ -114,62 +120,82 @@ function cdtop() {
 }
 
 function since_commit() {
+    # usage: since_commit 12345
+    # usage: since_commit HEAD~3
+    # list all the files modified by all the commits since the given commit,
+    #   including currently unstaged changes
     commit=${1:-HEAD}
     git diff $commit --name-only --relative
 }
 
 function in_commit() {
+    # usage: in_commit 12345
+    # usage: in_commit HEAD~3
+    # list all the files modified as part of the given commit
     commit=${1:-HEAD}
     git diff $commit ${commit}\^ --name-only --relative
 }
 
 function dirty() {
-    git ls-files --modified --unmerged | awk '{ print $4 }' | sort -u
+    # git ls-files --modified --unmerged | awk '{ print $4 }' | sort -u
+    git ls-files --modified | sort -u
 }
 
-function pyflakes_name() {
-    find . -name $1 | xargs pyflakes
-}
+if [ $(command -v pyflakes) ]; then
+    # only define pyflakes commands if pyflakes is available
 
-function pyflakes_since() {
-    since_commit $1 | grep '\.py$' | xargs pyflakes
-}
+    function pyflakes_name() {
+        find . -name $1 | xargs pyflakes
+    }
 
-function pyflakes_commit() {
-    in_commit $1 | grep '\.py$' | xargs pyflakes
-}
+    function pyflakes_since() {
+        since_commit $1 | grep '\.py$' | xargs pyflakes
+    }
 
-function pyflakes_dirty() {
-    dirty | grep '\.py$' | xargs pyflakes
-}
+    function pyflakes_commit() {
+        in_commit $1 | grep '\.py$' | xargs pyflakes
+    }
 
-function pylint_since() {
-    since_commit $1 | grep '\.py$' | xargs pylint
-}
+    function pyflakes_dirty() {
+        dirty | grep '\.py$' | xargs pyflakes
+    }
+fi
 
-function pylint_commit() {
-    in_commit $1 | grep '\.py$' | xargs pylint
-}
+if [ $(command -v pylint) ]; then
+    # only define pylint commands if pylint is available
 
-function pylint_dirty() {
-    dirty | grep '\.py$' | xargs pylint
-}
+    function pylint_since() {
+        since_commit $1 | grep '\.py$' | xargs pylint
+    }
 
-function jshint_name() {
-    find . -name $1 | xargs jshint
-}
+    function pylint_commit() {
+        in_commit $1 | grep '\.py$' | xargs pylint
+    }
 
-function jshint_since() {
-    since_commit $1 | grep '\.js$' | xargs jshint
-}
+    function pylint_dirty() {
+        dirty | grep '\.py$' | xargs pylint
+    }
+fi
 
-function jshint_commit() {
-    in_commit $1 | grep '\.js$' | xargs jshint
-}
+if [ $(command -v jshint) ]; then
+    # only define jshint commands if jshint is available
 
-function jshint_dirty() {
-    dirty | grep '\.js$' | xargs jshint
-}
+    function jshint_name() {
+        find . -name $1 | xargs jshint
+    }
+
+    function jshint_since() {
+        since_commit $1 | grep '\.js$' | xargs jshint
+    }
+
+    function jshint_commit() {
+        in_commit $1 | grep '\.js$' | xargs jshint
+    }
+
+    function jshint_dirty() {
+        dirty | grep '\.js$' | xargs jshint
+    }
+fi
 
 function edit_name() {
     $EDITOR_NEW_WINDOW $(find . -name $1 -type f)
@@ -195,10 +221,6 @@ function add_dirty() {
     dirty | xargs git add
 }
 
-# alias push.='git push origin HEAD'
-# alias push+='git push origin +HEAD'
-# alias push-='git push origin :$(git rev-parse --symbolic-full-name HEAD)'
-
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWSTASHSTATE=1
 export GIT_PS1_SHOWUNTRACKEDFILES=1
@@ -206,6 +228,6 @@ export GIT_PS1_SHOWUPSTREAM="auto"
 export GIT_PS1_SHOWCOLORHINTS=1
 export GIT_PS1_DESCRIBE_STYLE="branch"
 
-#if [ $(which virtualenvwrapper.sh 2>/dev/null) ]; then
-#    source $(which virtualenvwrapper.sh)
-#fi
+if [ $(command -v virtualenvwrapper.sh) ]; then
+    source $(which virtualenvwrapper.sh)
+fi
