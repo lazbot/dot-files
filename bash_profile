@@ -40,6 +40,20 @@ if [ $(uname) = 'Darwin' ] ; then
     # Setting PATH for Python 3.5
     PATH="/Library/Frameworks/Python.framework/Versions/3.5/bin:${PATH}"
     export PATH
+elif [ $(uname) = 'CYGWIN_NT-6.1' ] ; then
+    alias ls='ls --color=always'
+    alias ll='ls -FGalh'
+    alias grep='grep --color=auto'
+    alias tree='tree -C'
+    export SVN_EDITOR='vim'
+    export EDITOR='vim'
+
+    if [ -f ~/.git-completion.bash ] ; then
+        source ~/.git-completion.bash
+    fi
+    if [ -f ~/.git-prompt.sh ] ; then
+        source ~/.git-prompt.sh
+    fi
 else
     alias ls='ls --color=always'
     alias ll='ls --color=always -Falh'
@@ -87,7 +101,7 @@ export HISTSIZE=10000
 export HISTIGNORE="&:ls:[bf]g:exit:history:..:make:git pull:git commit"
 shopt -s histappend cdspell autocd
 
-function did() { history | grep $1 | grep -v did; }
+function did() { history | grep $1 | grep -v 'did'; }
 
 # Don't bind if I'm in GoSublime's 9o shell
 if [ -z "${_fn}" ]; then
