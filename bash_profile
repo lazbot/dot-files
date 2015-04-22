@@ -22,9 +22,7 @@ if [ $(uname) = 'Darwin' ] ; then
 
     alias ll='ls -FTGalh'
 
-    function fx() {
-        find . -name $1 | xargs ls -FTGalhd
-    }
+    function fx() { find . -name $1 | xargs ls -FTGalhd; }
 
     if [ -f $(brew --prefix)/etc/bash_completion ]; then
         source $(brew --prefix)/etc/bash_completion
@@ -40,23 +38,11 @@ if [ $(uname) = 'Darwin' ] ; then
     # Setting PATH for Python 3.5
     PATH="/Library/Frameworks/Python.framework/Versions/3.5/bin:${PATH}"
     export PATH
-elif [ $(uname) = 'CYGWIN_NT-6.1' ] ; then
+else
     alias ls='ls --color=always'
     alias ll='ls -FGalh'
     alias grep='grep --color=auto'
     alias tree='tree -C'
-    export SVN_EDITOR='vim'
-    export EDITOR='vim'
-
-    if [ -f ~/.git-completion.bash ] ; then
-        source ~/.git-completion.bash
-    fi
-    if [ -f ~/.git-prompt.sh ] ; then
-        source ~/.git-prompt.sh
-    fi
-else
-    alias ls='ls --color=always'
-    alias ll='ls --color=always -Falh'
     export EDITOR='vim'
     export EDITOR_NEW_WINDOW='vim'
 
@@ -67,22 +53,15 @@ else
         source ~/.git-prompt.sh
     fi
 
-    function fx() {
-        find . -name $1 | xargs ls --color=always -Falhd
-    }
+    function fx() { find . -name $1 | xargs ls --color=always -Falhd; }
 
     export PATH=$PATH:/usr/local/sbin:~/bin
 fi
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-function virtualenv_info() {
-    [ $VIRTUAL_ENV ] && echo ' ('$(basename $VIRTUAL_ENV)')'
-}
-
-function tip() {
-    git rev-parse --short HEAD 2>/dev/null
-}
+function virtualenv_info()  { [ $VIRTUAL_ENV ] && echo ' ('$(basename $VIRTUAL_ENV)')'; }
+function tip()              { git rev-parse --short HEAD 2>/dev/null; }
 
 # used to reattach ssh forwarding to "stale" tmux sessions
 # http://justinchouinard.com/blog/2010/04/10/fix-stale-ssh-environment-variables-in-gnu-screen-and-tmux/
@@ -96,6 +75,13 @@ function refresh_ssh() {
 }
 
 export PS1='\n\! \u@$(uname -n):\[\e[34m\]\W\[\e[0m\]$(virtualenv_info) $(__git_ps1 "\[\e[32m\][%s $(tip)]\[\e[0m\]")\$ '
+
+export GIT_PS1_SHOWDIRTYSTATE=1
+export GIT_PS1_SHOWSTASHSTATE=1
+export GIT_PS1_SHOWUNTRACKEDFILES=1
+export GIT_PS1_SHOWUPSTREAM="auto"
+export GIT_PS1_SHOWCOLORHINTS=1
+export GIT_PS1_DESCRIBE_STYLE="branch"
 
 export HISTSIZE=10000
 export HISTIGNORE="&:ls:[bf]g:exit:history:..:make:git pull:git commit"
@@ -125,11 +111,20 @@ function fcd() {
 }
 
 function cdtop() {
-    # usage: cdtop
-    # change directory to the top-level of a git working-copy
+    # usage: cdtop [<relative path>]
+    # change directory to the top-level of a git working-copy, or to a path relative to that
     git_dir=$(git rev-parse --git-dir)
     if [ -n "$git_dir" ]; then
-        cd "$git_dir/../"
+        cd "$git_dir/../$1"
+    fi
+}
+
+function pushdtop() {
+    # usage: pushdtop [<relative path>]
+    # pushd combined with cdtop
+    git_dir=$(git rev-parse --git-dir)
+    if [ -n "$git_dir" ]; then
+        pushd "$git_dir/../$1"
     fi
 }
 
@@ -157,90 +152,33 @@ function dirty() {
 
 if [ $(command -v pyflakes) ]; then
     # only define pyflakes commands if pyflakes is available
-
-    function pyflakes_name() {
-        find . -name $1 | xargs pyflakes
-    }
-
-    function pyflakes_since() {
-        since_commit $1 | grep '\.py$' | xargs pyflakes
-    }
-
-    function pyflakes_commit() {
-        in_commit $1 | grep '\.py$' | xargs pyflakes
-    }
-
-    function pyflakes_dirty() {
-        dirty | grep '\.py$' | xargs pyflakes
-    }
+    function pyflakes_name()    { find . -name $1 | xargs pyflakes; }
+    function pyflakes_since()   { since_commit $1 | grep '\.py$' | xargs pyflakes; }
+    function pyflakes_commit()  { in_commit $1 | grep '\.py$' | xargs pyflakes; }
+    function pyflakes_dirty()   { dirty | grep '\.py$' | xargs pyflakes; }
 fi
 
 if [ $(command -v pylint) ]; then
     # only define pylint commands if pylint is available
-
-    function pylint_since() {
-        since_commit $1 | grep '\.py$' | xargs pylint
-    }
-
-    function pylint_commit() {
-        in_commit $1 | grep '\.py$' | xargs pylint
-    }
-
-    function pylint_dirty() {
-        dirty | grep '\.py$' | xargs pylint
-    }
+    function pylint_name()      { find . -name $1 | xargs pylint; }
+    function pylint_since()     { since_commit $1 | grep '\.py$' | xargs pylint; }
+    function pylint_commit()    { in_commit $1 | grep '\.py$' | xargs pylint; }
+    function pylint_dirty()     { dirty | grep '\.py$' | xargs pylint; }
 fi
 
 if [ $(command -v jshint) ]; then
     # only define jshint commands if jshint is available
-
-    function jshint_name() {
-        find . -name $1 | xargs jshint
-    }
-
-    function jshint_since() {
-        since_commit $1 | grep '\.js$' | xargs jshint
-    }
-
-    function jshint_commit() {
-        in_commit $1 | grep '\.js$' | xargs jshint
-    }
-
-    function jshint_dirty() {
-        dirty | grep '\.js$' | xargs jshint
-    }
+    function jshint_name()      { find . -name $1 | xargs jshint; }
+    function jshint_since()     { since_commit $1 | grep '\.js$' | xargs jshint; }
+    function jshint_commit()    { in_commit $1 | grep '\.js$' | xargs jshint; }
+    function jshint_dirty()     { dirty | grep '\.js$' | xargs jshint; }
 fi
 
-function edit_name() {
-    $EDITOR_NEW_WINDOW $(find . -name $1 -type f)
-}
-
-function edit_which() {
-    $EDITOR_NEW_WINDOW $(which $1)
-}
-
-function edit_since() {
-    $EDITOR_NEW_WINDOW $(since_commit $1)
-}
-
-function edit_commit() {
-    $EDITOR_NEW_WINDOW $(in_commit $1)
-}
-
-function edit_dirty() {
-    $EDITOR_NEW_WINDOW $(dirty)
-}
-
-function add_dirty() {
-    dirty | xargs git add
-}
-
-export GIT_PS1_SHOWDIRTYSTATE=1
-export GIT_PS1_SHOWSTASHSTATE=1
-export GIT_PS1_SHOWUNTRACKEDFILES=1
-export GIT_PS1_SHOWUPSTREAM="auto"
-export GIT_PS1_SHOWCOLORHINTS=1
-export GIT_PS1_DESCRIBE_STYLE="branch"
+function edit_name()    { $EDITOR_NEW_WINDOW $(find . -name $1 -type f); }
+function edit_which()   { $EDITOR_NEW_WINDOW $(which $1); }
+function edit_since()   { $EDITOR_NEW_WINDOW $(since_commit $1); }
+function edit_commit()  { $EDITOR_NEW_WINDOW $(in_commit $1); }
+function edit_dirty()   { $EDITOR_NEW_WINDOW $(dirty); }
 
 if [ $(command -v virtualenvwrapper.sh) ]; then
     source $(which virtualenvwrapper.sh)
