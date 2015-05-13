@@ -28,6 +28,8 @@ if [ $(uname) = 'Darwin' ] ; then
         source $(brew --prefix)/etc/bash_completion
     fi
 
+    export NIMPATH=/Users/wolf/Work/nim/bin
+    export NIMBLEPATH=/Users/wolf/.nimble/bin
     export GOPATH=/Users/wolf/Work/go
     # [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
@@ -38,6 +40,8 @@ if [ $(uname) = 'Darwin' ] ; then
     # Setting PATH for Python 3.5
     PATH="/Library/Frameworks/Python.framework/Versions/3.5/bin:${PATH}"
     export PATH
+
+    export PATH="${PATH}:${NIMPATH}:${NIMBLEPATH}"
 else
     alias ls='ls --color=always'
     alias ll='ls -FGalh'
@@ -74,7 +78,7 @@ function refresh_ssh() {
     fi
 }
 
-export PS1='\n\! \u@$(uname -n):\[\e[34m\]\W\[\e[0m\]$(virtualenv_info) $(__git_ps1 "\[\e[32m\][%s $(tip)]\[\e[0m\]")\$ '
+export PS1='\n\! \u@$(uname -n):\[\e[35m\]\W\[\e[0m\]$(virtualenv_info) $(__git_ps1 "\[\e[32m\][%s $(tip)]\[\e[0m\]")\$ '
 
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWSTASHSTATE=1
