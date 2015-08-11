@@ -1,24 +1,48 @@
 [alias]
-	st = status -s
-	lg = log --oneline --decorate
-	show-graph = log --graph --oneline --decorate --abbrev-commit
+    ec = config --global -e
+    ci = commit
+    co = checkout
+    st = status -s
+    le = log --oneline --decorate
+    show-graph = log --oneline --decorate --all --graph
     lg2 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-	glog = log --all --pretty='format:%d%Cgreen%h%Creset %an - %s' --graph
+    glog = log --all --pretty='format:%d%Cgreen%h%Creset %an - %s' --graph
+    count-changes = !git status -s | wc -l
+    d = diff --word-diff
 [apply]
     whitespace = fix
 [color]
     ui = auto
+    branch = auto
+    diff = auto
+    status = auto
+    pager = true
+[color "branch"]
+    current = green
+    local = blue
+    remote = red
+[color "diff"]
+    meta = yellow
+    frag = magenta
+    old = red bold
+    new = green
+    plain = white
 [color "forward"]
     status = bold
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
 [core]
     editor = subl -n -w
     legacyheaders = false
-	excludesfile = /Users/wolf/.gitignore_global
+    excludesfile = /Users/wolf/.gitignore_global
+    whitespace = trailing-space,space-before-tab,cr-at-eol
 [diff]
     renames = copy
     mnemonicprefix = true
     tool = opendiff
-	renamelimit = 1428
+    renamelimit = 1428
 [difftool]
     prompt = false
 [gui]
@@ -28,14 +52,23 @@
     autocorrect = 20
 [merge]
     tool = opendiff
+    conflictstyle = diff3
 [mergetool]
     prompt = false
 [push]
-	default = current
+    default = current
 [repack]
     usedeltabaseoffset = true
 [rerere]
     enabled = true
 [user]
-	name = Wolf
-	email = wolf@zv.cx
+    name = Wolf
+    email = wolf@zv.cx
+[credential]
+    helper = osxkeychain
+[difftool "sourcetree"]
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    path =
+[mergetool "sourcetree"]
+    cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+    trustExitCode = true
