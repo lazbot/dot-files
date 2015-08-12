@@ -7,7 +7,7 @@ else # OS X `ls`
 fi
 
 alias ls="command ls ${colorflag}"
-alias ll="ls -FTalh ${colorflag}"
+alias ll="ls -Falh ${colorflag}"
 alias tree='tree -C'
 alias grep='grep --color'
 
