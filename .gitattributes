@@ -1,0 +1,3 @@
+bashrc      eol=lf
+gitconfig   eol=lf
+tmux.conf   eol=lf
