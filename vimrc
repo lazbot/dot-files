@@ -28,3 +28,6 @@ set expandtab
 
 nnoremap <C-L> :noh<CR><C-L>
 
+autocmd BufEnter *.py set expandtab ts=4 sw=4 softtabstop=4 smarttab smartindent expandtab
+    \ cinwords=if,elif,else,for,while,try,except,finally,def,class
+    \ list listchars=tab:>- backspace=indent,eol,start tw=79 nocin noai
