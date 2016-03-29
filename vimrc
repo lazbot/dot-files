@@ -1,4 +1,4 @@
-set nocompatible
+set nocompatible    " this Vim, not vi: so act like it
 filetype indent plugin on
 syntax on
 set hidden
@@ -6,19 +6,20 @@ set wildmenu
 set showcmd
 set hlsearch
 
-set ignorecase
-set smartcase
+set ignorecase      " searches are case-insensitive
+set smartcase       " ...unless you actuall include capital letters in the search string
+
+set laststatus=2    " always show the status line
+set cmdheight=2     " enlarge the command area to two lines
+set number          " display line numbers
+set ruler           " show current line number, position in line, percentage in file on the status line
 
 set backspace=indent,eol,start
 set autoindent
 set nostartofline
-set ruler
-set laststatus=2
 set confirm
 set visualbell
 set mouse=a
-set cmdheight=2
-set number
 set notimeout ttimeout ttimeoutlen=200
 set pastetoggle=<F11>
 
