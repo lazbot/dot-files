@@ -1,6 +1,6 @@
 [[ "$-" != *i* ]] && return
 
-if ls --color > /dev/null 2>&1; then # GNU `ls`
+if ls --color >/dev/null 2>&1; then # GNU `ls`
     colorflag="--color"
 else # OS X `ls`
     colorflag=-G
@@ -13,7 +13,7 @@ alias grep='grep --color'
 
 if [[ -d .bash_topics.d ]]; then
     for topic in .bash_topics.d/*; do
-        . ${topic}
+        source ${topic}
     done
 fi
 
@@ -39,7 +39,6 @@ if [ $(uname) = 'Darwin' ] ; then
     fi
 
     export GOPATH=/Users/wolf/Work/go
-    [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 else
     if [ -f ~/.git-completion.bash ] ; then
         source ~/.git-completion.bash
@@ -68,7 +67,11 @@ function refresh_ssh() {
     fi
 }
 
-export PS1='\n\! \u@\h:\[\e[35m\]\W\[\e[0m\]$(virtualenv_info) $(__git_ps1 "\[\e[32m\][$(time_since_last_commit) %s $(tip)]\[\e[0m\]")\$ '
+if command -v __git_ps1 >/dev/null; then
+    export PS1='\n\! \u@\h:\[\e[35m\]\W\[\e[0m\]$(virtualenv_info) $(__git_ps1 "\[\e[32m\][$(time_since_last_commit) %s $(tip)]\[\e[0m\]")\$ '
+else
+    export PS1='\n\! \u@\h:\[\e[35m\]\W\[\e[0m\]$(virtualenv_info)\$ '
+fi
 
 export HISTSIZE=10000
 export HISTIGNORE="&:ls:[bf]g:exit:history:..:make:git pull:git commit"
@@ -86,24 +89,20 @@ fi
 function f() {
     # usage: f <name>
     # find the filesystem object with the given name
-    find . -name $1 2>/dev/null
+    find . -name "$1" 2>/dev/null
 }
 
 function fx() {
-    find . -name $1 2>/dev/null | xargs ls ${colorflag} -Falhd
+    find . -name "$1" 2>/dev/null | xargs ls ${colorflag} -Falhd
 }
 
 function fcd() {
     # usage: fcd <directory_basename>
     # example: fcd js
     # find the directory with the given name, cd-ing into the first match found
-    path=$(find . -name $1 -type d 2>/dev/null | awk "BEGIN { getline; print }")
+    path=$(find . -name "$1" -type d 2>/dev/null | awk "BEGIN { getline; print }")
     cd $(dirname $path)
 }
 
-function edit_name()    { $EDITOR_NEW_WINDOW $(find . -name $1 -type f); }
-function edit_which()   { $EDITOR_NEW_WINDOW $(which $1); }
-
-if [ $(command -v virtualenvwrapper.sh) ]; then
-    source $(which virtualenvwrapper.sh)
-fi
+function en()   { $EDITOR_NEW_WINDOW $(find . -name "$1" -type f 2>/dev/null); }
+function ew()   { $EDITOR_NEW_WINDOW $(which "$1"); }

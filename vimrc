@@ -1,26 +1,50 @@
 " .vimrc
 
 set nocompatible    " this Vim, not vi, so act like it
-filetype indent plugin on
-syntax on
+filetype off        " required by Vundle
+
+" set the runtime path to include Vundle and intitialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'tpope/vim-sensible'
+Plugin 'tpope/vim-abolish'
+Plugin 'tpope/vim-characterize'
+Plugin 'tpope/vim-eunuch'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'mileszs/ack.vim'
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'nelstrom/vim-visual-star-search'
+Plugin 'Valloric/YouCompleteMe'
+
+let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__'] "ignore files in NERDTree
+if executable('ag')
+    let g:ackprg = 'ag --vimgrep'
+endif
+
+call vundle#end()   " required
+
 set hidden
-set wildmenu
 set showcmd
 set hlsearch
 
 set ignorecase      " searches are case-insensitive
 set smartcase       " ...unless you actually include capital letters in the search string
 
-set laststatus=2    " always show the status line
 set cmdheight=2     " enlarge the command area to two lines
 set number          " display line numbers
-set ruler           " show current line number, position in line, percentage in file on the status line
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 set splitright      " make splitting act more like one would expect: open new splits to the right
 set splitbelow      " ...and/or below the current window
 
-set backspace=indent,eol,start
-set autoindent
 set nostartofline
 set confirm
 set visualbell
@@ -32,8 +56,5 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 
-nnoremap <C-L> :noh<CR><C-L>
-
-autocmd BufEnter *.py set expandtab ts=4 sw=4 softtabstop=4 smarttab smartindent expandtab
-    \ cinwords=if,elif,else,for,while,try,except,finally,def,class
-    \ list listchars=tab:>- backspace=indent,eol,start tw=79 nocin noai
+autocmd BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+highlight BadWhitespace ctermbg=red guibg=darkred
