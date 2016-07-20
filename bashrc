@@ -74,7 +74,7 @@ else
 fi
 
 export HISTSIZE=10000
-export HISTIGNORE="&:ls:[bf]g:exit:history:..:make:git pull:git commit"
+export HISTIGNORE="&:ls:[bf]g:exit:history:..:make:git pull:git commit:did"
 shopt -s histappend cdspell autocd
 
 function did() { history | grep "$1" | grep -v 'did'; }
