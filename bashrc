@@ -77,7 +77,7 @@ export HISTSIZE=10000
 export HISTIGNORE="&:ls:[bf]g:exit:history:..:make:git pull:git commit"
 shopt -s histappend cdspell autocd
 
-function did() { history | grep $1 | grep -v 'did'; }
+function did() { history | grep "$1" | grep -v 'did'; }
 
 # Don't bind if I'm in GoSublime's 9o shell
 if [ -z "${_fn}" ]; then
