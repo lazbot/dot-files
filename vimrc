@@ -23,7 +23,6 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 "Plugin 'mileszs/ack.vim'
-Plugin 'wincent/command-t'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-scripts/indentpython.vim'
@@ -32,6 +31,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'StanAngeloff/php.vim'
 Plugin 'nelstrom/vim-visual-star-search'
 Plugin 'vim-scripts/YankRing.vim'
+"Plugin 'ctrlpvim/ctrlp.vim'
 "Plugin 'Valloric/YouCompleteMe'
 
 let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__'] "ignore files in NERDTree
@@ -76,7 +76,7 @@ set confirm
 set visualbell
 set mouse=a
 set notimeout ttimeout ttimeoutlen=200
-set pastetoggle=<F11>
+"set pastetoggle=<F11>
 
 set shiftwidth=4
 set softtabstop=4
