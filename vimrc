@@ -18,23 +18,33 @@ Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-characterize'
 Plugin 'tpope/vim-eunuch'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
-" Plugin 'mileszs/ack.vim'
+"Plugin 'mileszs/ack.vim'
+Plugin 'wincent/command-t'
+Plugin 'editorconfig/editorconfig-vim'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-scripts/indentpython.vim'
+Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
+Plugin 'vim-scripts/scratch.vim'
 Plugin 'nelstrom/vim-visual-star-search'
-" Plugin 'Valloric/YouCompleteMe'
+Plugin 'vim-scripts/YankRing.vim'
+"Plugin 'Valloric/YouCompleteMe'
 
 let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__'] "ignore files in NERDTree
 if executable('ag')
     let g:ackprg = 'ag --vimgrep'
 endif
+let g:yankring_min_element_length = 2
+let g:yankring_manage_numbered_reg = 1
+let g:yankring_history_dir = '~/.vim,~/vimfiles,$HOME'
 
 call vundle#end()   " required
 " }}}
 
-" Personal settings {{{
+" Settings {{{
 set hidden
 set showcmd
 set hlsearch
@@ -43,10 +53,18 @@ set showmatch
 set ignorecase      " searches are case-insensitive
 set smartcase       " ...unless you actually include capital letters in the search string
 
-set scrolloff=5
+set scrolloff=3
 set cmdheight=2     " enlarge the command area to two lines
 set number          " display line numbers
-set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+" statusline {{{
+set statusline=%<                           " where to break
+set statusline+=%t%M%R                      " leafname, modified, read-only
+set statusline+=\ %{fugitive#statusline()}  " if in git repo, git info
+set statusline+=%=                          " switch to the right side
+set statusline+=%y                          " file type, e.g., [markdown]
+set statusline+=\ %-14.(%l,%c%)             " like ruler, line, column
+set statusline+=\ %P                        " percentage of file shown
+" }}}
 
 set splitright      " make splitting act more like one would expect: open new splits to the right
 set splitbelow      " ...and/or below the current window
@@ -66,7 +84,7 @@ set expandtab
 " Vim files {{{
 augroup filetype_vim
     autocmd!
-    autocmd FileType vim setlocal foldmethod=marker
+    autocmd FileType vim setlocal foldmethod=marker foldlevelstart=0
 augroup END
 
 augroup filetype_help
@@ -75,14 +93,13 @@ augroup filetype_help
 augroup END
 " }}}
 
-" Bad whitespace {{{
-augroup bad_whitespace
-    autocmd BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
-    highlight BadWhitespace ctermbg=red guibg=darkred
+" Python files {{{
+augroup filetype_python
+    set foldmethod=indent
 augroup END
 " }}}
 
-" Personal key mapping and abbreviations {{{
+" Mappings and abbreviations {{{
 iabbrev @@ Wolf@zv.cx
 
 let mapleader = ","
@@ -90,13 +107,29 @@ let maplocalleader = "\\"
 
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <leader>w :2match Error /\v\s+$/<cr>
+nnoremap <leader>W :2match none<cr>
 
+" move the current line down
 nnoremap - ddp
+" move the current line up
 nnoremap _ ddkP
+
+" in insert mode, uppercase the word under the cursor
 inoremap <c-U> <esc>lm`viwU``i
+" in normal mode, uppercase the word under the cursor
 nnoremap <c-U> m`viwU``
 
-" Train myself to _not_ use the arrow keys in insert mode
+" <F11> shows the YankRing window
+nnoremap <silent> <F11> :YRShow<cr>
+" <F12> opens the scratch buffer (TODO: make this a toggle)
+nnoremap <silent> <F12> :Sscratch<cr>
+
+" Get out of insert mode without stretching for <Esc>
+inoremap jk <Esc>
+inoremap <Esc> <nop>
+
+" Train myself to _not_ use the arrow keys in insert or normal modes
 inoremap <Left> <nop>
 nnoremap <Left> <nop>
 inoremap <Right> <nop>
