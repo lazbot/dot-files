@@ -18,6 +18,7 @@ Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-characterize'
 Plugin 'tpope/vim-eunuch'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-markdown'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
@@ -28,7 +29,7 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
-Plugin 'vim-scripts/scratch.vim'
+Plugin 'StanAngeloff/php.vim'
 Plugin 'nelstrom/vim-visual-star-search'
 Plugin 'vim-scripts/YankRing.vim'
 "Plugin 'Valloric/YouCompleteMe'
@@ -56,6 +57,7 @@ set smartcase       " ...unless you actually include capital letters in the sear
 set scrolloff=3
 set cmdheight=2     " enlarge the command area to two lines
 set number          " display line numbers
+
 " statusline {{{
 set statusline=%<                           " where to break
 set statusline+=%t%M%R                      " leafname, modified, read-only
@@ -105,8 +107,11 @@ iabbrev @@ Wolf@zv.cx
 let mapleader = ","
 let maplocalleader = "\\"
 
+" Edit my ~/.vimrc in a new vertical split, source it
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
+
+" Highlight whitespace errors, clear highlighting
 nnoremap <leader>w :2match Error /\v\s+$/<cr>
 nnoremap <leader>W :2match none<cr>
 
@@ -120,16 +125,14 @@ inoremap <c-U> <esc>lm`viwU``i
 " in normal mode, uppercase the word under the cursor
 nnoremap <c-U> m`viwU``
 
-" <F11> shows the YankRing window
+" <F11> toggles the YankRing window
 nnoremap <silent> <F11> :YRShow<cr>
-" <F12> opens the scratch buffer (TODO: make this a toggle)
-nnoremap <silent> <F12> :Sscratch<cr>
 
 " Get out of insert mode without stretching for <Esc>
 inoremap jk <Esc>
 inoremap <Esc> <nop>
 
-" Train myself to _not_ use the arrow keys in insert or normal modes
+" Train myself _not_ to use the arrow keys in insert or normal modes
 inoremap <Left> <nop>
 nnoremap <Left> <nop>
 inoremap <Right> <nop>
