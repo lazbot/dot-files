@@ -13,34 +13,45 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
+
 Plugin 'tpope/vim-sensible'
+
 Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-characterize'
 Plugin 'tpope/vim-eunuch'
 Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-markdown'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
-"Plugin 'mileszs/ack.vim'
-Plugin 'editorconfig/editorconfig-vim'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'vim-scripts/indentpython.vim'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
+
+Plugin 'pangloss/vim-javascript'
 Plugin 'StanAngeloff/php.vim'
-Plugin 'nelstrom/vim-visual-star-search'
-Plugin 'vim-scripts/YankRing.vim'
-"Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'vim-scripts/indentpython.vim'
+
+Plugin 'scrooloose/nerdcommenter'
 "Plugin 'Valloric/YouCompleteMe'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'editorconfig/editorconfig-vim'
 
 let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__'] "ignore files in NERDTree
-if executable('ag')
-    let g:ackprg = 'ag --vimgrep'
-endif
+Plugin 'scrooloose/nerdtree'
+
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
+Plugin 'tpope/vim-markdown'
+
 let g:yankring_min_element_length = 2
 let g:yankring_manage_numbered_reg = 1
 let g:yankring_history_dir = '~/.vim,~/vimfiles,$HOME'
+Plugin 'vim-scripts/YankRing.vim'
+
+"let g:ctrlp_map = '<c-t>'
+"let g:ctrlp_cmd = 'CtrlPMixed'
+"Plugin 'ctrlpvim/ctrlp.vim'
+
+"if executable('ag')
+"    let g:ackprg = 'ag --vimgrep'
+"endif
+"Plugin 'mileszs/ack.vim'
 
 call vundle#end()   " required
 " }}}
@@ -95,9 +106,15 @@ augroup filetype_help
 augroup END
 " }}}
 
+" Markdown files {{{
+augroup filetype_markdown
+    autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+augroup END
+" }}}
+
 " Python files {{{
 augroup filetype_python
-    set foldmethod=indent
+    autocmd FileType python set foldmethod=indent
 augroup END
 " }}}
 
@@ -107,6 +124,10 @@ iabbrev @@ Wolf@zv.cx
 let mapleader = ","
 let maplocalleader = "\\"
 
+" Save the current file
+nnoremap <c-s> :update<cr>
+inoremap <c-s> <esc>:update<cr>a
+
 " Edit my ~/.vimrc in a new vertical split, source it
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
@@ -114,6 +135,11 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
 " Highlight whitespace errors, clear highlighting
 nnoremap <leader>w :2match Error /\v\s+$/<cr>
 nnoremap <leader>W :2match none<cr>
+
+" Toggle relative line numbers for easy motion
+nnoremap <leader>r :set relativenumber!<cr>
+" Toggle list view
+nnoremap <leader>l :set list!<cr>
 
 " move the current line down
 nnoremap - ddp
@@ -130,15 +156,17 @@ nnoremap <silent> <F11> :YRShow<cr>
 
 " Get out of insert mode without stretching for <Esc>
 inoremap jk <Esc>
-inoremap <Esc> <nop>
+vnoremap jk <Esc>
+" Don't remap <Esc> as that breaks mouse input
 
 " Train myself _not_ to use the arrow keys in insert or normal modes
 inoremap <Left> <nop>
-nnoremap <Left> <nop>
 inoremap <Right> <nop>
-nnoremap <Right> <nop>
 inoremap <Up> <nop>
-nnoremap <Up> <nop>
 inoremap <Down> <nop>
+nnoremap <Left> <nop>
+nnoremap <Right> <nop>
+nnoremap <Up> <nop>
 nnoremap <Down> <nop>
 " }}}
+
