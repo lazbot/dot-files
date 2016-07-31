@@ -17,13 +17,8 @@ if [[ -d .bash_topics.d ]]; then
     done
 fi
 
-if [ "${SSH_CONNECTION}" ] ; then
-    export EDITOR='vim'
-    export EDITOR_NEW_WINDOW='vim'
-else
-    export EDITOR='subl -w'
-    export EDITOR_NEW_WINDOW='subl --new-window'
-fi
+export EDITOR='vim'
+export EDITOR_NEW_WINDOW='vim'
 
 if [ $(uname) = 'Darwin' ] ; then
     # if I'm on MacOS X...
@@ -79,12 +74,9 @@ shopt -s histappend cdspell autocd
 
 function did() { history | grep "$1" | grep -v 'did'; }
 
-# Don't bind if I'm in GoSublime's 9o shell
-if [ -z "${_fn}" ]; then
-    bind '"\t":menu-complete'
-    bind '"\e[A":history-search-backward'
-    bind '"\e[B":history-search-forward'
-fi
+bind '"\t":menu-complete'
+bind '"\e[A":history-search-backward'
+bind '"\e[B":history-search-forward'
 
 function f() {
     # usage: f <name>
