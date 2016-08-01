@@ -124,10 +124,6 @@ iabbrev @@ Wolf@zv.cx
 let mapleader = ","
 let maplocalleader = "\\"
 
-" Save the current file
-nnoremap <c-s> :update<cr>
-inoremap <c-s> <esc>:update<cr>a
-
 " Edit my ~/.vimrc in a new vertical split, source it
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
@@ -141,16 +137,18 @@ nnoremap <leader>r :set relativenumber!<cr>
 " Toggle list view
 nnoremap <leader>l :set list!<cr>
 
+" in insert mode, uppercase the word under the cursor
+inoremap <leader>u <esc>lm`viwU``i
+" in normal mode, uppercase the word under the cursor
+nnoremap <leader>u m`viwU``
+
 " move the current line down
 nnoremap - ddp
 " move the current line up
 nnoremap _ ddkP
 
-" in insert mode, uppercase the word under the cursor
-inoremap <c-U> <esc>lm`viwU``i
-" in normal mode, uppercase the word under the cursor
-nnoremap <c-U> m`viwU``
-
+" <F1> toggles NERDTree's directory window
+nnoremap <silent> <F1> :NERDTreeToggle<cr>
 " <F11> toggles the YankRing window
 nnoremap <silent> <F11> :YRShow<cr>
 
