@@ -44,9 +44,9 @@ let g:yankring_manage_numbered_reg = 1
 let g:yankring_history_dir = '~/.vim,~/vimfiles,$HOME'
 Plugin 'vim-scripts/YankRing.vim'
 
-"let g:ctrlp_map = '<c-t>'
-"let g:ctrlp_cmd = 'CtrlPMixed'
-"Plugin 'ctrlpvim/ctrlp.vim'
+let g:ctrlp_map = '<c-t>'
+let g:ctrlp_cmd = 'CtrlPMixed'
+Plugin 'ctrlpvim/ctrlp.vim'
 
 "if executable('ag')
 "    let g:ackprg = 'ag --vimgrep'
