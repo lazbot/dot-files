@@ -137,11 +137,6 @@ nnoremap <leader>r :set relativenumber!<cr>
 " Toggle list view
 nnoremap <leader>l :set list!<cr>
 
-" in insert mode, uppercase the word under the cursor
-inoremap <leader>u <esc>lm`viwU``i
-" in normal mode, uppercase the word under the cursor
-nnoremap <leader>u m`viwU``
-
 " move the current line down
 nnoremap - ddp
 " move the current line up
