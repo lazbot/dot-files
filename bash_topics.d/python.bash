@@ -1,13 +1,3 @@
-if [ $(uname) = 'Darwin' ] ; then
-    # Setting PATH for Python 2.7
-    PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
-    export PATH
-
-    # Setting PATH for Python 3.5
-    PATH="/Library/Frameworks/Python.framework/Versions/3.5/bin:${PATH}"
-    export PATH
-fi
-
 if [ $(command -v pyflakes) ]; then
     # only define pyflakes commands if pyflakes is available
     function pyflakes_name()    { find . -name $1 | xargs pyflakes; }
