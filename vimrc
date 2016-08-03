@@ -88,6 +88,7 @@ set visualbell
 set mouse=a
 set notimeout ttimeout ttimeoutlen=200
 "set pastetoggle=<F11>
+set sessionoptions+=resize,unix,slash
 
 set shiftwidth=4
 set softtabstop=4
