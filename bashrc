@@ -24,8 +24,6 @@ if [ $(uname) = 'Darwin' ] ; then
     # if I'm on MacOS X...
 
     if [ -z "${SSH_CONNECTION}" ] ; then
-        export VAGRANT_VMWARE_CLONE_DIRECTORY="~/Documents/Vagrant/"
-
         alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
     fi
 
