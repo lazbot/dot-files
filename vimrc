@@ -71,7 +71,7 @@ set number          " display line numbers
 
 " statusline {{{
 set statusline=%<                           " where to break
-set statusline+=%t%M%R                      " leafname, modified, read-only
+set statusline+=%f%M%R                      " leafname, modified, read-only
 set statusline+=\ %{fugitive#statusline()}  " if in git repo, git info
 set statusline+=%=                          " switch to the right side
 set statusline+=%y                          " file type, e.g., [markdown]
