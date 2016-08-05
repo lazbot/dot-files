@@ -1,6 +1,6 @@
 " .vimrc
 
-set nocompatible    " this Vim, not vi, so act like it
+set nocompatible    " this is Vim, not vi, so act like it
 
 " Plugins {{{
 filetype off        " required by Vundle
@@ -139,9 +139,9 @@ nnoremap <leader>r :set relativenumber!<cr>
 nnoremap <leader>l :set list!<cr>
 
 " move the current line down
-nnoremap - ddp
+nnoremap - @='ddp'<cr>
 " move the current line up
-nnoremap _ ddkP
+nnoremap _ @='ddkP'<cr>
 
 " <F1> toggles NERDTree's directory window
 nnoremap <silent> <F1> :NERDTreeToggle<cr>
