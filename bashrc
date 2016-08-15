@@ -35,8 +35,6 @@ if [ $(uname) = 'Darwin' ] ; then
     if [ -f $(brew --prefix)/etc/bash_completion ]; then
         source $(brew --prefix)/etc/bash_completion
     fi
-
-    export GOPATH=/Users/wolf/Work/go
 else
     if [ -f ~/.git-completion.bash ] ; then
         source ~/.git-completion.bash
