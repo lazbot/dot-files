@@ -169,4 +169,4 @@ nnoremap <Up> <nop>
 nnoremap <Down> <nop>
 " }}}
 
-colorscheme PaperColor
+"colorscheme PaperColor
