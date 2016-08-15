@@ -1,5 +1,7 @@
 [[ "$-" != *i* ]] && return
 
+stty -ixon -ixoff
+
 if ls --color >/dev/null 2>&1; then # GNU `ls`
     colorflag="--color"
 else # OS X `ls`
@@ -18,7 +20,6 @@ if [[ -d .bash_topics.d ]]; then
 fi
 
 export EDITOR='vim'
-export EDITOR_NEW_WINDOW='vim'
 
 if [ $(uname) = 'Darwin' ] ; then
     # if I'm on MacOS X...
@@ -94,5 +95,5 @@ function fcd() {
     cd $(dirname $path)
 }
 
-function en()   { $EDITOR_NEW_WINDOW $(find . -name "$1" -type f 2>/dev/null); }
-function ew()   { $EDITOR_NEW_WINDOW $(which "$1"); }
+function en()   { $EDITOR $(find . -name "$1" -type f 2>/dev/null); }
+function ew()   { $EDITOR $(which "$1"); }
