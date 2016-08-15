@@ -170,4 +170,8 @@ nnoremap <Up> <nop>
 nnoremap <Down> <nop>
 " }}}
 
-"colorscheme PaperColor
+if has('mac')
+    colorscheme PaperColor
+else
+    colorscheme peachpuff
+endif
