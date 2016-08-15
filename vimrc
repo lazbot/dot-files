@@ -27,11 +27,16 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'pangloss/vim-javascript'
 Plugin 'StanAngeloff/php.vim'
 Plugin 'vim-scripts/indentpython.vim'
+Plugin 'chikamichi/mediawiki.vim'
 
 Plugin 'scrooloose/nerdcommenter'
 "Plugin 'Valloric/YouCompleteMe'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'editorconfig/editorconfig-vim'
+
+Plugin 'NLKNguyen/papercolor-theme'
+set t_Co=256
+set background=light
 
 let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__'] "ignore files in NERDTree
 Plugin 'scrooloose/nerdtree'
@@ -164,3 +169,4 @@ nnoremap <Up> <nop>
 nnoremap <Down> <nop>
 " }}}
 
+colorscheme PaperColor
