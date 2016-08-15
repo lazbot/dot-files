@@ -1,5 +1,9 @@
 [[ "$-" != *i* ]] && return
 
+if [ -f /etc/bashrc ] ; then
+    source /etc/bashrc
+fi
+
 stty -ixon -ixoff
 
 if ls --color >/dev/null 2>&1; then # GNU `ls`
