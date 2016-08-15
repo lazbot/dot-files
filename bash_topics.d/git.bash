@@ -46,6 +46,6 @@ function dirty() {
     git ls-files --modified | sort -u
 }
 
-function edit_since()   { $EDITOR_NEW_WINDOW $(since_commit $1); }
-function edit_commit()  { $EDITOR_NEW_WINDOW $(in_commit $1); }
-function edit_dirty()   { $EDITOR_NEW_WINDOW $(dirty); }
+function edit_since()   { $EDITOR $(since_commit $1); }
+function edit_commit()  { $EDITOR $(in_commit $1); }
+function edit_dirty()   { $EDITOR $(dirty); }
