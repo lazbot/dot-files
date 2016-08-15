@@ -34,6 +34,7 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'editorconfig/editorconfig-vim'
 
+Plugin 'vim-scripts/CycleColor'
 Plugin 'NLKNguyen/papercolor-theme'
 set t_Co=256
 set background=light
