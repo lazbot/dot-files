@@ -28,6 +28,7 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'StanAngeloff/php.vim'
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'chikamichi/mediawiki.vim'
+Plugin 'tmux-plugins/vim-tmux'
 
 Plugin 'scrooloose/nerdcommenter'
 "Plugin 'Valloric/YouCompleteMe'
