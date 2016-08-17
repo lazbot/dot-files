@@ -35,10 +35,9 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'editorconfig/editorconfig-vim'
 
+set background=light
 Plugin 'vim-scripts/CycleColor'
 Plugin 'NLKNguyen/papercolor-theme'
-set t_Co=256
-set background=light
 
 let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__'] "ignore files in NERDTree
 Plugin 'scrooloose/nerdtree'
