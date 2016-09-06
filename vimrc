@@ -31,6 +31,7 @@ Plugin 'chikamichi/mediawiki.vim'
 Plugin 'tmux-plugins/vim-tmux'
 
 Plugin 'scrooloose/nerdcommenter'
+Plugin 'jiangmiao/auto-pairs'
 "Plugin 'Valloric/YouCompleteMe'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'editorconfig/editorconfig-vim'
@@ -139,6 +140,9 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
 nnoremap <leader>w :2match Error /\v\s+$/<cr>
 nnoremap <leader>W :2match none<cr>
 
+" Open the CtrlP's buffer explorer window
+nnoremap <leader>b :CtrlPBuffer<cr>
+
 " Toggle relative line numbers for easy motion
 nnoremap <leader>r :set relativenumber!<cr>
 " Toggle list view
@@ -174,4 +178,8 @@ if has('mac')
     colorscheme PaperColor
 else
     colorscheme peachpuff
+endif
+
+if has('unnamedplus')
+    set clipboard=unnamed,unnamedplus
 endif
