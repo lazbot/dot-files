@@ -147,6 +147,7 @@ nnoremap <leader>b :CtrlPBuffer<cr>
 nnoremap <leader>r :set relativenumber!<cr>
 " Toggle list view
 nnoremap <leader>l :set list!<cr>
+set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+,eol:$
 
 " move the current line down
 nnoremap - @='ddp'<cr>
