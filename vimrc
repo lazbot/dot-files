@@ -129,8 +129,8 @@ augroup END
 " Mappings and abbreviations {{{
 iabbrev @@ Wolf@zv.cx
 
-let mapleader = ","
-let maplocalleader = "\\"
+let mapleader = "\\"
+let maplocalleader = "|"
 
 " Edit my ~/.vimrc in a new vertical split, source it
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
