@@ -171,6 +171,7 @@ nnoremap gj j
 nnoremap gk k
 nnoremap g^ ^
 nnoremap g$ $
+nnoremap g0 0
 
 " Get out of insert mode without stretching for <Esc>
 inoremap jk <Esc>
