@@ -161,6 +161,17 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
+" Act naturally when lines wrap
+nnoremap j gj
+nnoremap k gk
+nnoremap ^ g^
+nnoremap 0 g0
+nnoremap $ g$
+nnoremap gj j
+nnoremap gk k
+nnoremap g^ ^
+nnoremap g$ $
+
 " Get out of insert mode without stretching for <Esc>
 inoremap jk <Esc>
 " Don't remap <Esc> as that breaks mouse input
