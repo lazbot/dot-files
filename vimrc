@@ -33,15 +33,17 @@ Plugin 'tmux-plugins/vim-tmux'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'jiangmiao/auto-pairs'
 "Plugin 'Valloric/YouCompleteMe'
+"Plugin 'easymotion/vim-easymotion'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'editorconfig/editorconfig-vim'
+Plugin 'bronson/vim-visual-star-search'
 
 set background=light
 Plugin 'vim-scripts/CycleColor'
 Plugin 'NLKNguyen/papercolor-theme'
 
-let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__'] "ignore files in NERDTree
-Plugin 'scrooloose/nerdtree'
+"let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__'] "ignore files in NERDTree
+"Plugin 'scrooloose/nerdtree'
 
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
 Plugin 'tpope/vim-markdown'
@@ -129,7 +131,7 @@ augroup END
 " Mappings and abbreviations {{{
 iabbrev @@ Wolf@zv.cx
 
-let mapleader = "\\"
+let mapleader = "\<space>"
 let maplocalleader = "|"
 
 " Edit my ~/.vimrc in a new vertical split, source it
@@ -143,25 +145,28 @@ nnoremap <leader>W :2match none<cr>
 " Open the CtrlP's buffer explorer window
 nnoremap <leader>b :CtrlPBuffer<cr>
 
-" Toggle relative line numbers for easy motion
+" Toggle relative line numbers for easier motion math
 nnoremap <leader>r :set relativenumber!<cr>
 " Toggle list view
 nnoremap <leader>l :set list!<cr>
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+,eol:$
 
-" move the current line down
+" move the current line down (takes a count of distance to move)
 nnoremap - @='ddp'<cr>
-" move the current line up
+" move the current line up (takes a count of distance to move)
 nnoremap _ @='ddkP'<cr>
 
-" <F1> toggles NERDTree's directory window
-nnoremap <silent> <F1> :NERDTreeToggle<cr>
 " <F11> toggles the YankRing window
 nnoremap <silent> <F11> :YRShow<cr>
 
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+
 " Get out of insert mode without stretching for <Esc>
 inoremap jk <Esc>
-vnoremap jk <Esc>
 " Don't remap <Esc> as that breaks mouse input
 
 " Train myself _not_ to use the arrow keys in insert or normal modes
