@@ -16,11 +16,11 @@ Plugin 'VundleVim/Vundle.vim'
 
 Plugin 'tpope/vim-sensible'
 
-Plugin 'tpope/vim-abolish'
+"Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-characterize'
-Plugin 'tpope/vim-eunuch'
+"Plugin 'tpope/vim-eunuch'
 Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-repeat'
+"Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 
@@ -41,9 +41,6 @@ Plugin 'bronson/vim-visual-star-search'
 set background=light
 Plugin 'vim-scripts/CycleColor'
 Plugin 'NLKNguyen/papercolor-theme'
-
-"let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__'] "ignore files in NERDTree
-"Plugin 'scrooloose/nerdtree'
 
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
 Plugin 'tpope/vim-markdown'
@@ -164,6 +161,14 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
+nnoremap h gh
+nnoremap j gj
+nnoremap k gk
+nnoremap l gl
+nnoremap gh h
+nnoremap gj j
+nnoremap gk k
+nnoremap gl l
 
 " Get out of insert mode without stretching for <Esc>
 inoremap jk <Esc>
