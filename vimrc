@@ -115,18 +115,21 @@ augroup END
 
 " Markdown files {{{
 augroup filetype_markdown
+    autocmd!
     autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 augroup END
 " }}}
 
 " Python files {{{
 augroup filetype_python
+    autocmd!
     autocmd FileType python set foldmethod=indent
 augroup END
 " }}}
 
 " Mappings and abbreviations {{{
-iabbrev @@ Wolf@zv.cx
+iabbrev ehome Wolf@zv.cx
+iabbrev ework Wolf@learninga-z.com
 
 let mapleader = "\<space>"
 let maplocalleader = "\\"
@@ -149,9 +152,9 @@ nnoremap <leader>l :set list!<cr>
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+,eol:$
 
 " move the current line down (takes a count of distance to move)
-nnoremap - @='ddp'<cr>
+"nnoremap - @='ddp'<cr>
 " move the current line up (takes a count of distance to move)
-nnoremap _ @='ddkP'<cr>
+"nnoremap _ @='ddkP'<cr>
 
 " <F11> toggles the YankRing window
 nnoremap <silent> <F11> :YRShow<cr>
