@@ -26,7 +26,7 @@ Plugin 'tpope/vim-unimpaired'
 
 Plugin 'pangloss/vim-javascript'
 Plugin 'StanAngeloff/php.vim'
-Plugin 'vim-scripts/indentpython.vim'
+Plugin 'tweekmonster/braceless.vim'
 Plugin 'chikamichi/mediawiki.vim'
 Plugin 'tmux-plugins/vim-tmux'
 
@@ -37,6 +37,7 @@ Plugin 'jiangmiao/auto-pairs'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'bronson/vim-visual-star-search'
+Plugin 'mbbill/undotree'
 
 set background=light
 Plugin 'vim-scripts/CycleColor'
@@ -59,6 +60,12 @@ Plugin 'ctrlpvim/ctrlp.vim'
 "endif
 "Plugin 'mileszs/ack.vim'
 
+"Plugin 'scrooloose/syntastic'
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+
 call vundle#end()   " required
 " }}}
 
@@ -80,6 +87,11 @@ set statusline=%<                           " where to break
 set statusline+=%f%M%R                      " leafname, modified, read-only
 set statusline+=\ %{fugitive#statusline()}  " if in git repo, git info
 set statusline+=%=                          " switch to the right side
+
+"set statusline+=%#warningmsg#               " Syntastic
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+
 set statusline+=%y                          " file type, e.g., [markdown]
 set statusline+=\ %-14.(%l,%c%)             " like ruler, line, column
 set statusline+=\ %P                        " percentage of file shown
@@ -123,7 +135,7 @@ augroup END
 " Python files {{{
 augroup filetype_python
     autocmd!
-    autocmd FileType python set foldmethod=indent
+    autocmd FileType python BracelessEnable +indent +highlight-cc2 +fold
 augroup END
 " }}}
 
@@ -158,6 +170,9 @@ set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+,eol:$
 
 " <F11> toggles the YankRing window
 nnoremap <silent> <F11> :YRShow<cr>
+
+" <F5> toggles the Undotree window
+nnoremap <F5> :UndotreeToggle<cr>
 
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
@@ -199,4 +214,9 @@ endif
 
 if has('unnamedplus')
     set clipboard=unnamed,unnamedplus
+endif
+
+if has('persistent_undo')
+    set undodir=~/.vim/undo/
+    set undofile
 endif
