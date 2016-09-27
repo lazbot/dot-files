@@ -109,6 +109,7 @@ set notimeout ttimeout ttimeoutlen=200
 set sessionoptions+=resize,unix,slash
 set clipboard=unnamed,autoselect
 set guioptions+=a
+set cursorline
 
 set shiftwidth=4
 set softtabstop=4
