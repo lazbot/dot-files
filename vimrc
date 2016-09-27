@@ -107,10 +107,28 @@ set mouse=a
 set notimeout ttimeout ttimeoutlen=200
 "set pastetoggle=<F11>
 set sessionoptions+=resize,unix,slash
+set clipboard=unnamed,autoselect
+set guioptions+=a
 
 set shiftwidth=4
 set softtabstop=4
 set expandtab
+" }}}
+
+" All files {{{
+augroup open_and_close
+    autocmd!
+    " Show the cursorline in the active window when _not_ in insert mode
+    autocmd InsertLeave,WinEnter * set cursorline
+    autocmd InsertEnter,WinLeave * set nocursorline
+
+    " When opening a buffer, restore the exact cursor position if it still
+    " exists
+    autocmd BufReadPost *
+        \ if line("'\"") > 1 && line("'\"") <= line("$") |
+        \   exe "normal! g`\"" |
+        \ endif
+augroup END
 " }}}
 
 " Vim files {{{
@@ -210,10 +228,6 @@ if has('mac')
     colorscheme PaperColor
 else
     colorscheme peachpuff
-endif
-
-if has('unnamedplus')
-    set clipboard=unnamed,unnamedplus
 endif
 
 if has('persistent_undo')
