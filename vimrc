@@ -32,12 +32,14 @@ Plugin 'tmux-plugins/vim-tmux'
 
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'jiangmiao/auto-pairs'
-"Plugin 'Valloric/YouCompleteMe'
 "Plugin 'easymotion/vim-easymotion'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'bronson/vim-visual-star-search'
 Plugin 'mbbill/undotree'
+
+"Plugin 'Valloric/YouCompleteMe'
+"let g:ycm_collect_identifiers_from_tags_files = 1
 
 set background=light
 Plugin 'vim-scripts/CycleColor'
@@ -46,12 +48,12 @@ Plugin 'NLKNguyen/papercolor-theme'
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
 Plugin 'tpope/vim-markdown'
 
-let g:yankring_min_element_length = 2
-let g:yankring_manage_numbered_reg = 1
-let g:yankring_history_dir = '~/.vim,~/vimfiles,$HOME'
-Plugin 'vim-scripts/YankRing.vim'
+"let g:yankring_min_element_length = 2
+"let g:yankring_manage_numbered_reg = 1
+"let g:yankring_history_dir = '~/.vim,~/vimfiles,$HOME'
+"Plugin 'vim-scripts/YankRing.vim'
 
-let g:ctrlp_map = '<c-t>'
+"let g:ctrlp_map = '<c-t>'
 let g:ctrlp_cmd = 'CtrlPMixed'
 Plugin 'ctrlpvim/ctrlp.vim'
 
@@ -168,6 +170,10 @@ let maplocalleader = "\\"
 " Edit my ~/.vimrc in a new vertical split, source it
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
+if has('gui')
+    nnoremap <leader>eg :vsplit $MYGVIMRC<cr>
+    nnoremap <leader>sg :source $MYGVIMRC<cr>
+endif
 
 " Highlight whitespace errors, clear highlighting
 nnoremap <leader>w :2match Error /\v\s+$/<cr>
