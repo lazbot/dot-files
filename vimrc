@@ -31,6 +31,7 @@ Plugin 'chikamichi/mediawiki.vim'
 Plugin 'tmux-plugins/vim-tmux'
 
 Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdtree'
 Plugin 'jiangmiao/auto-pairs'
 "Plugin 'easymotion/vim-easymotion'
 Plugin 'airblade/vim-gitgutter'
@@ -198,6 +199,7 @@ set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+,eol:$
 
 " <F5> toggles the Undotree window
 nnoremap <F5> :UndotreeToggle<cr>
+nnoremap <F1> :NERDTreeToggle<cr>
 
 " Act naturally when lines wrap
 nnoremap j gj
