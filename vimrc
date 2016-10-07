@@ -194,15 +194,10 @@ set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+,eol:$
 "nnoremap _ @='ddkP'<cr>
 
 " <F11> toggles the YankRing window
-nnoremap <silent> <F11> :YRShow<cr>
+"nnoremap <silent> <F11> :YRShow<cr>
 
 " <F5> toggles the Undotree window
 nnoremap <F5> :UndotreeToggle<cr>
-
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
 
 " Act naturally when lines wrap
 nnoremap j gj
@@ -219,16 +214,6 @@ nnoremap g0 0
 " Get out of insert mode without stretching for <Esc>
 inoremap jk <Esc>
 " Don't remap <Esc> as that breaks mouse input
-
-" Train myself _not_ to use the arrow keys in insert or normal modes
-inoremap <Left> <nop>
-inoremap <Right> <nop>
-inoremap <Up> <nop>
-inoremap <Down> <nop>
-nnoremap <Left> <nop>
-nnoremap <Right> <nop>
-nnoremap <Up> <nop>
-nnoremap <Down> <nop>
 " }}}
 
 if has('mac')
