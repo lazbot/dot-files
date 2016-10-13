@@ -229,8 +229,7 @@ else
     colorscheme PaperColor
 endif
 
-if &term =~ '^screen'
-    " tmux knows the extended mouse mode
+if &term !~ 'builtin_gui'
     set ttymouse=xterm2
 endif
 " }}}
