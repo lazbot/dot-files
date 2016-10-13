@@ -31,7 +31,6 @@ Plugin 'chikamichi/mediawiki.vim'
 Plugin 'tmux-plugins/vim-tmux'
 
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
 Plugin 'jiangmiao/auto-pairs'
 "Plugin 'easymotion/vim-easymotion'
 Plugin 'airblade/vim-gitgutter'
@@ -41,6 +40,7 @@ Plugin 'mbbill/undotree'
 
 "Plugin 'Valloric/YouCompleteMe'
 "let g:ycm_collect_identifiers_from_tags_files = 1
+"let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 
 set background=light
 Plugin 'vim-scripts/CycleColor'
@@ -54,7 +54,11 @@ Plugin 'tpope/vim-markdown'
 "let g:yankring_history_dir = '~/.vim,~/vimfiles,$HOME'
 "Plugin 'vim-scripts/YankRing.vim'
 
-"let g:ctrlp_map = '<c-t>'
+let NERDTreeSortOrder=[]
+let NERDTreeIgnore=['\.o$[[file]]', '\.pyc$[[file]]']
+Plugin 'scrooloose/nerdtree'
+
+let g:ctrlp_map = '<c-t>'
 let g:ctrlp_cmd = 'CtrlPMixed'
 Plugin 'ctrlpvim/ctrlp.vim'
 
@@ -218,11 +222,18 @@ inoremap jk <Esc>
 " Don't remap <Esc> as that breaks mouse input
 " }}}
 
-if has('mac')
-    colorscheme PaperColor
-else
+" terminal and colorscheme properties {{{
+if &term =~ '^screen' || !has('mac')
     colorscheme peachpuff
+else
+    colorscheme PaperColor
 endif
+
+if &term =~ '^screen'
+    " tmux knows the extended mouse mode
+    set ttymouse=xterm2
+endif
+" }}}
 
 if has('persistent_undo')
     set undodir=~/.vim/undo/
